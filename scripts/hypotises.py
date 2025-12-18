@@ -3,7 +3,7 @@ import pandas as pd
 from scipy.stats import f_oneway, pearsonr
 
 #Пути
-PROCESSED_FILE = os.path.join("data", "processed", "data_preprocessed.csv")
+PROCESSED_FILE = os.path.join("data", "data_clean.csv")
 RESULTS_DIR = os.path.join("data", "stats")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -46,6 +46,17 @@ for p in pollutants:
         "Тип проверки": "Корреляция",
         "Загрязнитель": p,
         "Группы / переменные": "Влажность",
+        "Статистика": corr,
+        "p-value": p_value,
+        "Вывод": "Значимо" if p_value < 0.05 else "Не значимо"
+    })
+
+for p in pollutants:
+    corr, p_value = pearsonr(df['wind_speed'], df[p])
+    results.append({
+        "Тип проверки": "Корреляция",
+        "Загрязнитель": p,
+        "Группы / переменные": "Скорость ветра",
         "Статистика": corr,
         "p-value": p_value,
         "Вывод": "Значимо" if p_value < 0.05 else "Не значимо"
